@@ -1,5 +1,9 @@
 package diccionario
 
+import (
+	TDAPila "tdas/pila"
+)
+
 type abb[K comparable, V any] struct {
 	raiz        *nodo[K, V]
 	cantidad    int
@@ -11,8 +15,9 @@ type nodo[K comparable, V any] struct {
 	par *parClaveValor[K, V]
 }
 type iteradorArbol[K comparable, V any] struct {
-	arbol  *abb[K, V]
-	actual *nodo[K, V]
+	arbol *abb[K, V]
+	//actual *nodo[K, V]
+	pila TDAPila.Pila[*nodo[K, V]]
 }
 
 func CrearABB[K comparable, V any](funcion_cmp func(K, K) int) DiccionarioOrdenado[K, V] {
@@ -100,7 +105,6 @@ func (ab *abb[K, V]) Borrar(clave K) V {
 }
 
 func (ab *abb[K, V]) borrarNodo(nodo **nodo[K, V], clave K) *nodo[K, V] {
-
 	if *nodo == nil {
 		return *nodo
 	} else if ab.funcion_cmp((*nodo).par.clave, clave) < 0 {
@@ -111,17 +115,18 @@ func (ab *abb[K, V]) borrarNodo(nodo **nodo[K, V], clave K) *nodo[K, V] {
 
 		if (*nodo).izq != nil && (*nodo).der != nil {
 			nodoMinimo := ab.encontrarRemplazante((*nodo).izq)
+
 			(*nodo).par = nodoMinimo.par
-			(*nodo).izq = ab.borrarNodo(&(*nodo).izq, clave)
+			(*nodo).izq = ab.borrarNodo(&(*nodo).izq, (*nodo).par.clave)
 		} else if (*nodo).der != nil {
 
 			return (*nodo).der
 		} else if (*nodo).izq != nil {
+
 			return (*nodo).izq
 		} else {
 
-			*nodo = nil
-			return *nodo
+			return nil
 		}
 	}
 	return *nodo
@@ -146,24 +151,51 @@ func (ab *abb[K, V]) IteradorRango(desde *K, hasta *K) IterDiccionario[K, V] {
 }
 func (ab *abb[K, V]) Iterador() IterDiccionario[K, V] {
 	iter := new(iteradorArbol[K, V])
+	iter.pila = TDAPila.CrearPilaDinamica[*nodo[K, V]]()
+	//Chequear caso arbol vacio
+	iter.pila.Apilar(ab.raiz)
+	ab.raiz.buscarPrimero(ab.raiz, &iter.pila)
 	return iter
 }
 func (ab *abb[K, V]) Iterar(visitar func(clave K, dato V) bool) {
+	ab.raiz.iterar(visitar)
+}
 
+func (nodoR *nodo[K, V]) iterar(visitar func(clave K, dato V) bool) { //recorrido inorder
+
+	if nodoR == nil {
+		return
+	}
+	nodoR.izq.iterar(visitar)
+	if !visitar(nodoR.par.clave, nodoR.par.dato) {
+		return
+	}
+	nodoR.der.iterar(visitar)
+}
+
+func (*nodo[K, V]) buscarPrimero(nodoR *nodo[K, V], pila *TDAPila.Pila[*nodo[K, V]]) *TDAPila.Pila[*nodo[K, V]] { //Debo ir buscando el primero y apilando el resto
+	if nodoR == nil {
+		return pila
+	}
+	if nodoR.izq != nil {
+		(*pila).Apilar(nodoR.izq)
+	}
+	return nodoR.buscarPrimero(nodoR.izq, pila)
 }
 
 func (i *iteradorArbol[K, V]) HaySiguiente() bool {
-
-	return false
+	return (i.pila).EstaVacia()
 }
 
 func (i *iteradorArbol[K, V]) VerActual() (K, V) {
 	if !i.HaySiguiente() {
 		panic("El iterador termino de iterar")
 	}
-	return i.actual.par.clave, i.actual.par.dato
+	//return i.actual.par.clave, i.actual.par.dato
+	nodo := i.pila.VerTope()
+	return nodo.par.clave, nodo.par.dato
 }
 
 func (i *iteradorArbol[K, V]) Siguiente() {
-
+	//nodoactual := i.pila.Desapilar()
 }

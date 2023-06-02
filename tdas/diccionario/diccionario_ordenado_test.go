@@ -1,19 +1,20 @@
-package diccionario
+package diccionario_test
 
 import (
 	"fmt"
 	"strconv"
 	"strings"
+	TDADiccionario "tdas/diccionario"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
-var TAMS_VOLUMEN = []int{100, 200, 400, 800, 1600, 3200}
+var TAMS_VOLUMEN1 = []int{100, 200, 400, 800, 1600, 3200}
 
 func TestUnElementABB(t *testing.T) {
 	t.Log("Comprueba que Diccionario con un elemento tiene esa Clave, unicamente")
-	dic := CrearABB[string, int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
 	dic.Guardar("C", 10)
 	dic.Guardar("D", 12)
 	dic.Guardar("A", 12)
@@ -33,7 +34,7 @@ func TestDiccionarioGuardarABB(t *testing.T) {
 	claves := []string{clave1, clave2, clave3}
 	valores := []string{valor1, valor2, valor3}
 
-	dic := CrearABB[string, string](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, string](strings.Compare)
 	require.False(t, dic.Pertenece(claves[0]))
 	require.False(t, dic.Pertenece(claves[0]))
 	dic.Guardar(claves[0], valores[0])
@@ -67,7 +68,7 @@ func TestReemplazoDatoABB(t *testing.T) {
 	t.Log("Guarda un par de claves, y luego vuelve a guardar, buscando que el dato se haya reemplazado")
 	clave := "Gato"
 	clave2 := "Perro"
-	dic := CrearABB[string, string](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, string](strings.Compare)
 
 	dic.Guardar(clave, "miau")
 	dic.Guardar(clave, "miau")
@@ -91,7 +92,7 @@ func TestReemplazoDatoHopscotchABB(t *testing.T) {
 	t.Log("Guarda bastantes claves, y luego reemplaza sus datos. Luego valida que todos los datos sean " +
 		"correctos. Para una implementación Hopscotch, detecta errores al hacer lugar o guardar elementos.")
 
-	dic := CrearABB[string, int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
 	for i := 0; i < 500; i++ {
 		dic.Guardar(strconv.Itoa(i), i)
 	}
@@ -116,7 +117,7 @@ func TestDiccionarioBorrarABB(t *testing.T) {
 	valor3 := "moo"
 	claves := []string{clave1, clave2, clave3}
 	valores := []string{valor1, valor2, valor3}
-	dic := CrearABB[string, string](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, string](strings.Compare)
 
 	require.False(t, dic.Pertenece(claves[0]))
 	require.False(t, dic.Pertenece(claves[0]))
@@ -148,7 +149,7 @@ func TestDiccionarioBorrarABB(t *testing.T) {
 func TestReutlizacionDeBorradosABB(t *testing.T) {
 	t.Log("Prueba de caja blanca: revisa, para el caso que fuere un HashCerrado, que no haya problema " +
 		"reinsertando un elemento borrado")
-	dic := CrearABB[string, string](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, string](strings.Compare)
 	clave := "hola"
 	dic.Guardar(clave, "mundo!")
 	dic.Borrar(clave)
@@ -162,7 +163,7 @@ func TestReutlizacionDeBorradosABB(t *testing.T) {
 
 func TestClaveVaciaABB(t *testing.T) {
 	t.Log("Guardamos una clave vacía (i.e. \"\") y deberia funcionar sin problemas")
-	dic := CrearABB[string, string](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, string](strings.Compare)
 	clave := ""
 	dic.Guardar(clave, clave)
 	require.True(t, dic.Pertenece(clave))
@@ -172,7 +173,7 @@ func TestClaveVaciaABB(t *testing.T) {
 
 func TestValorNuloABB(t *testing.T) {
 	t.Log("Probamos que el valor puede ser nil sin problemas")
-	dic := CrearABB[string, *int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, *int](strings.Compare)
 	clave := "Pez"
 	dic.Guardar(clave, nil)
 	require.True(t, dic.Pertenece(clave))
@@ -197,7 +198,7 @@ func TestIteradorInternoClavesABB(t *testing.T) {
 	clave2 := "Perro"
 	clave3 := "Vaca"
 	claves := []string{clave1, clave2, clave3}
-	dic := CrearABB[string, *int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, *int](strings.Compare)
 	dic.Guardar(claves[0], nil)
 	dic.Guardar(claves[1], nil)
 	dic.Guardar(claves[2], nil)
@@ -229,7 +230,7 @@ func TestIteradorInternoValoresABB(t *testing.T) {
 	clave4 := "Burrito"
 	clave5 := "Hamster"
 
-	dic := CrearABB[string, int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
 	dic.Guardar(clave1, 6)
 	dic.Guardar(clave2, 2)
 	dic.Guardar(clave3, 3)
@@ -254,7 +255,7 @@ func TestIteradorInternoValoresConBorradosABB(t *testing.T) { ////NO PASA EL TES
 	clave4 := "Burrito"
 	clave5 := "Hamster"
 
-	dic := CrearABB[string, int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
 	dic.Guardar(clave0, 7)
 	dic.Guardar(clave1, 6)
 	dic.Guardar(clave2, 2)
@@ -285,7 +286,7 @@ func TestIteradorInternoValoresConBorrad(t *testing.T) { ////NO PASA EL TEST, CH
 	clave4 := "Burrito"
 	clave5 := "Hamster"
 
-	dic := CrearABB[string, string](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, string](strings.Compare)
 	dic.Guardar(clave0, clave0)
 	dic.Guardar(clave1, clave1)
 	dic.Guardar(clave2, clave2)
@@ -311,7 +312,7 @@ func TestIteradorInternoValoresConBorradosclavesOrdenadas(t *testing.T) { ////NO
 	clave4 := "E"
 	clave5 := "F"
 
-	dic := CrearABB[string, int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
 	dic.Guardar(clave0, 7)
 	dic.Guardar(clave1, 6)
 	dic.Guardar(clave2, 2)
@@ -343,7 +344,7 @@ func TestIteradorInternoSumaDeTodosLosElementosABB(t *testing.T) {
 	clave4 := "Burrito"
 	clave5 := "Hamster"
 
-	dic := CrearABB[string, int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
 	dic.Guardar(clave0, 7)
 	dic.Guardar(clave1, 6)
 	dic.Guardar(clave2, 2)
@@ -371,7 +372,7 @@ func TestIteradorInternoSumaDeTodosLosElementosConBorradoABB(t *testing.T) { //N
 	clave4 := "Burrito"
 	clave5 := "Hamster"
 
-	dic := CrearABB[string, int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
 	dic.Guardar(clave0, 7)
 	dic.Guardar(clave1, 6)
 	dic.Guardar(clave2, 2)
@@ -404,7 +405,7 @@ func TestIteradorInternoCorteABB(t *testing.T) {
 	t.Log("Prueba de iterador interno, para validar que siempre que se indique que se corte" +
 		" la iteración con la función visitar, se corte")
 
-	dic := CrearABB[int, int](comparacion)
+	dic := TDADiccionario.CrearABB[int, int](comparacion)
 
 	// Inserta 'n' parejas en el hash
 	for i := 0; i < 10000; i++ {
@@ -435,7 +436,7 @@ func TestVolumenIteradorInternoCorteABB(t *testing.T) {
 	t.Log("Prueba de volumen de iterador interno, para validar que siempre que se indique que se corte" +
 		" la iteración con la función visitar, se corte")
 
-	dic := CrearABB[int, int](Par)
+	dic := TDADiccionario.CrearABB[int, int](Par)
 
 	// Inserta 'n' parejas en el hash
 	for i := 0; i < 10000; i++ {
@@ -463,7 +464,7 @@ func TestVolumenIteradorInternoCorteABB(t *testing.T) {
 }
 
 func ejecutarPruebaVolumenABB(b *testing.B, n int) {
-	dic := CrearABB[string, int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
 
 	claves := make([]string, n)
 	valores := make([]int, n)
@@ -510,7 +511,7 @@ func BenchmarkABB(b *testing.B) {
 		"ejecutando muchas veces las pruebas para generar un benchmark. Valida que la cantidad " +
 		"sea la adecuada. Luego validamos que podemos obtener y ver si pertenece cada una de las claves geeneradas, " +
 		"y que luego podemos borrar sin problemas")
-	for _, n := range TAMS_VOLUMEN {
+	for _, n := range TAMS_VOLUMEN1 {
 		b.Run(fmt.Sprintf("Prueba %d elementos", n), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				ejecutarPruebaVolumenABB(b, n)
@@ -523,7 +524,7 @@ func BenchmarkABB(b *testing.B) {
 
 func TestIterarDiccionarioVacioABB(t *testing.T) {
 	t.Log("Iterar sobre diccionario vacio es simplemente tenerlo al final")
-	dic := CrearABB[string, int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
 	iter := dic.Iterador()
 	require.False(t, iter.HaySiguiente())
 	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.VerActual() })
@@ -541,7 +542,7 @@ func TestDiccionarioIterarABB(t *testing.T) {
 	valor3 := "moo"
 	claves := []string{clave1, clave2, clave3}
 	valores := []string{valor1, valor2, valor3}
-	dic := CrearABB[string, string](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, string](strings.Compare)
 	dic.Guardar(claves[0], valores[0])
 	dic.Guardar(claves[1], valores[1])
 	dic.Guardar(claves[2], valores[2])
@@ -573,7 +574,7 @@ func TestDiccionarioIterarABB(t *testing.T) {
 
 func TestIteradorNoLlegaAlFinalABB(t *testing.T) {
 	t.Log("Crea un iterador y no lo avanza. Luego crea otro iterador y lo avanza.")
-	dic := CrearABB[string, string](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, string](strings.Compare)
 	claves := []string{"A", "B", "C"}
 	dic.Guardar(claves[0], "")
 	dic.Guardar(claves[1], "")
@@ -607,7 +608,7 @@ func TestPruebaIterarTrasBorradosABB(t *testing.T) {
 	clave2 := "Perro"
 	clave3 := "Vaca"
 
-	dic := CrearABB[string, string](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, string](strings.Compare)
 	dic.Guardar(clave1, "")
 	dic.Guardar(clave2, "")
 	dic.Guardar(clave3, "")
@@ -631,7 +632,7 @@ func TestPruebaIterarTrasBorradosABB(t *testing.T) {
 }
 
 func ejecutarPruebasVolumenIteradorABB(b *testing.B, n int) {
-	dic := CrearABB[string, *int](strings.Compare)
+	dic := TDADiccionario.CrearABB[string, *int](strings.Compare)
 
 	claves := make([]string, n)
 	valores := make([]int, n)
@@ -689,7 +690,7 @@ func BenchmarkIteradorABB(b *testing.B) {
 	b.Log("Prueba de stress del Iterador del Diccionario. Prueba guardando distinta cantidad de elementos " +
 		"(muy grandes) b.N elementos, iterarlos todos sin problemas. Se ejecuta cada prueba b.N veces para generar " +
 		"un benchmark")
-	for _, n := range TAMS_VOLUMEN {
+	for _, n := range TAMS_VOLUMEN1 {
 		b.Run(fmt.Sprintf("Prueba %d elementos", n), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				ejecutarPruebasVolumenIteradorABB(b, n)
@@ -704,4 +705,310 @@ func Par(num int, otro int) int {
 	return 0
 }
 
-//*/
+// Iterador Con RANGO
+func TestIterarDiccionarioVacioABBConRango(t *testing.T) {
+	t.Log("Iterar con rango sobre diccionario vacio es simplemente tenerlo al final")
+	dic := TDADiccionario.CrearABB[string, int](strings.Compare)
+	A := "A"
+	B := "B"
+	desde := &A
+	hasta := &B
+	iter := dic.IteradorRango(desde, hasta)
+	require.False(t, iter.HaySiguiente())
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.VerActual() })
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.Siguiente() })
+}
+
+func TestIterarDiccionarioABBAconRango(t *testing.T) {
+	t.Log("Guardamos valores en un Diccionario, e iteramos en un rango válido, se debe iterar correctamente")
+	dic := TDADiccionario.CrearABB[int, int](comparacion)
+
+	// Inserta 'n' parejas en el hash
+	dic.Guardar(6, 6)
+	dic.Guardar(15, 15)
+	dic.Guardar(1, 1)
+	dic.Guardar(4, 4)
+	dic.Guardar(10, 10)
+	dic.Guardar(16, 16)
+	dic.Guardar(8, 8)
+	dic.Guardar(13, 13)
+	dic.Guardar(11, 11)
+	dic.Guardar(14, 14)
+	D := 10
+	H := 14
+	desde := &D
+	hasta := &H
+	iter := dic.IteradorRango(desde, hasta)
+
+	require.True(t, iter.HaySiguiente())
+
+	primero, _ := iter.VerActual()
+	require.EqualValues(t, 10, primero)
+
+	require.True(t, iter.HaySiguiente())
+	iter.Siguiente()
+	segundo, _ := iter.VerActual()
+
+	require.NotEqualValues(t, primero, segundo)
+	require.EqualValues(t, 11, segundo)
+
+	require.True(t, iter.HaySiguiente())
+	iter.Siguiente()
+
+	tercero, _ := iter.VerActual()
+	require.EqualValues(t, 13, tercero)
+
+	require.True(t, iter.HaySiguiente())
+	iter.Siguiente()
+
+	cuarto, _ := iter.VerActual()
+	require.EqualValues(t, 14, cuarto)
+
+	iter.Siguiente()
+
+	require.False(t, iter.HaySiguiente())
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.Siguiente() })
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.VerActual() })
+}
+
+func TestIterarDiccionarioABBAconRangosinDesde(t *testing.T) {
+	t.Log("Guardamos valores en un Diccionario, e iteramos en un rango válido, se debe iterar correctamente")
+	dic := TDADiccionario.CrearABB[int, int](comparacion)
+
+	dic.Guardar(6, 6)
+	dic.Guardar(15, 15)
+	dic.Guardar(1, 1)
+	dic.Guardar(4, 4)
+	dic.Guardar(10, 10)
+	dic.Guardar(16, 16)
+	dic.Guardar(8, 8)
+	dic.Guardar(13, 13)
+	dic.Guardar(11, 11)
+	dic.Guardar(14, 14)
+
+	D := 6
+	H := 14
+	desde := &D
+	hasta := &H
+	iter := dic.IteradorRango(desde, hasta)
+
+	require.True(t, iter.HaySiguiente())
+
+	primero, _ := iter.VerActual()
+	require.EqualValues(t, 6, primero)
+
+	require.True(t, iter.HaySiguiente())
+	iter.Siguiente()
+	segundo, _ := iter.VerActual()
+
+	require.NotEqualValues(t, primero, segundo)
+	require.EqualValues(t, 8, segundo)
+
+	require.True(t, iter.HaySiguiente())
+	iter.Siguiente()
+
+	tercero, _ := iter.VerActual()
+	require.EqualValues(t, 10, tercero)
+
+	require.True(t, iter.HaySiguiente())
+	iter.Siguiente()
+
+	cuarto, _ := iter.VerActual()
+	require.EqualValues(t, 11, cuarto)
+	iter.Siguiente()
+
+	quinto, _ := iter.VerActual()
+	require.EqualValues(t, 13, quinto)
+
+	require.True(t, iter.HaySiguiente())
+	iter.Siguiente()
+
+	sexto, _ := iter.VerActual()
+	require.EqualValues(t, 14, sexto)
+	/*
+		iter.Siguiente()
+		septimo, _ := iter.VerActual()
+		require.EqualValues(t, 13, septimo)
+
+		require.True(t, iter.HaySiguiente())
+		iter.Siguiente()
+
+		octavo, _ := iter.VerActual()
+		require.EqualValues(t, 14, octavo)
+	*/
+	iter.Siguiente()
+
+	require.False(t, iter.HaySiguiente())
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.Siguiente() })
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.VerActual() })
+}
+
+func TestIterarDiccionarioABBAconRangosinDesde_2(t *testing.T) {
+	t.Log("Guardamos valores en un Diccionario, e iteramos en un rango válido, se debe iterar correctamente")
+	dic := TDADiccionario.CrearABB[int, int](comparacion)
+
+	dic.Guardar(6, 6)
+	H := 14
+	hasta := &H
+	iter := dic.IteradorRango(nil, hasta)
+
+	require.True(t, iter.HaySiguiente())
+
+	primero, _ := iter.VerActual()
+	require.EqualValues(t, 6, primero)
+	iter.Siguiente()
+
+	require.False(t, iter.HaySiguiente())
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.Siguiente() })
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.VerActual() })
+}
+
+func TestIterarDiccionarioABBAconRangosinHasta_2(t *testing.T) {
+	t.Log("Guardamos valores en un Diccionario, e iteramos en un rango válido, se debe iterar correctamente")
+	dic := TDADiccionario.CrearABB[int, int](comparacion)
+
+	dic.Guardar(6, 6)
+	H := 14
+	hasta := &H
+	iter := dic.IteradorRango(nil, hasta)
+
+	require.True(t, iter.HaySiguiente())
+
+	primero, _ := iter.VerActual()
+	require.EqualValues(t, 6, primero)
+	iter.Siguiente()
+
+	require.False(t, iter.HaySiguiente())
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.Siguiente() })
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.VerActual() })
+}
+
+func TestIterarDiccionarioABBAconRangosinDesde_3(t *testing.T) {
+	t.Log("Guardamos valores en un Diccionario, e iteramos en un rango válido, se debe iterar correctamente")
+	dic := TDADiccionario.CrearABB[int, int](comparacion)
+	dic.Guardar(6, 6)
+	dic.Guardar(5, 5)
+	D := 6
+	desde := &D
+	iter := dic.IteradorRango(desde, nil)
+
+	require.True(t, iter.HaySiguiente())
+
+	primero, _ := iter.VerActual()
+	require.EqualValues(t, 6, primero)
+	iter.Siguiente()
+
+	require.False(t, iter.HaySiguiente())
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.Siguiente() })
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.VerActual() })
+}
+
+func TestIterarDiccionarioABBAconRangosArbol7nodos(t *testing.T) {
+	t.Log("Guardamos valores en un Diccionario, e iteramos en un rango válido, se debe iterar correctamente")
+	dic := TDADiccionario.CrearABB[int, int](comparacion)
+	dic.Guardar(3, 3)
+	dic.Guardar(1, 1)
+	dic.Guardar(2, 2)
+	dic.Guardar(4, 4)
+	dic.Guardar(5, 5)
+	dic.Guardar(6, 6)
+	dic.Guardar(7, 7)
+
+	D := 2
+	H := 5
+	desde := &D
+	hasta := &H
+	iter := dic.IteradorRango(desde, hasta)
+
+	require.True(t, iter.HaySiguiente())
+
+	primero, _ := iter.VerActual()
+	require.EqualValues(t, 2, primero)
+	iter.Siguiente()
+
+	segundo, _ := iter.VerActual()
+	require.EqualValues(t, 3, segundo)
+	iter.Siguiente()
+
+	tercero, _ := iter.VerActual()
+	require.EqualValues(t, 4, tercero)
+	iter.Siguiente()
+
+	cuarto, _ := iter.VerActual()
+	require.EqualValues(t, 5, cuarto)
+	iter.Siguiente()
+
+	require.False(t, iter.HaySiguiente())
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.Siguiente() })
+	require.PanicsWithValue(t, "El iterador termino de iterar", func() { iter.VerActual() })
+}
+
+func TestIterarDiccionarioABBAconRangosSinDesdeNiHasta(t *testing.T) {
+	t.Log("Se comporta como un iter normal")
+	dic := TDADiccionario.CrearABB[int, int](comparacion)
+	dic.Guardar(3, 3)
+	dic.Guardar(1, 1)
+	dic.Guardar(2, 2)
+	dic.Guardar(4, 4)
+	dic.Guardar(5, 5)
+	dic.Guardar(6, 6)
+	dic.Guardar(7, 7)
+
+	iter := dic.IteradorRango(nil, nil)
+
+	require.True(t, iter.HaySiguiente())
+
+	primero, _ := iter.VerActual()
+	require.EqualValues(t, 1, primero)
+	iter.Siguiente()
+
+	segundo, _ := iter.VerActual()
+	require.EqualValues(t, 2, segundo)
+	iter.Siguiente()
+
+	tercero, _ := iter.VerActual()
+	require.EqualValues(t, 3, tercero)
+	iter.Siguiente()
+
+	cuarto, _ := iter.VerActual()
+	require.EqualValues(t, 4, cuarto)
+	iter.Siguiente()
+
+	require.True(t, iter.HaySiguiente())
+}
+
+func TestIteradorInternoDiccionarioABBAconRangosinDesde(t *testing.T) {
+	t.Log("Guardamos valores en un Diccionario, e iteramos en un rango válido, se debe iterar correctamente")
+	dic := TDADiccionario.CrearABB[int, int](comparacion)
+
+	dic.Guardar(3, 3)
+	dic.Guardar(1, 1)
+	dic.Guardar(4, 4)
+	dic.Guardar(2, 2)
+	dic.Guardar(5, 5)
+	dic.Guardar(6, 6)
+	dic.Guardar(7, 7)
+	D := 5
+	H := 10
+	desde := &D
+	hasta := &H
+
+	seguirEjecutando := true
+	siguioEjecutandoCuandoNoDebia := false
+
+	dic.IterarRango(desde, hasta, func(c int, v int) bool {
+		if !seguirEjecutando {
+			siguioEjecutandoCuandoNoDebia = true
+			return false
+		}
+		if c%2 != 0 {
+			seguirEjecutando = false
+			return false
+		}
+		return true
+	})
+
+	require.False(t, seguirEjecutando, "Se tendría que haber encontrado un elemento que genere el corte")
+	require.False(t, siguioEjecutandoCuandoNoDebia,
+		"No debería haber seguido ejecutando si encontramos un elemento que hizo que la iteración corte")
+}

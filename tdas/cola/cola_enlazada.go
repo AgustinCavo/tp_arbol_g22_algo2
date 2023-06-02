@@ -1,21 +1,23 @@
 package cola
 
-type nodo[T any] struct {
-	dato      T
-	siguiente *nodo[T]
-}
-
 type colaEnlazada[T any] struct {
-	primero *nodo[T]
-	ultimo  *nodo[T]
+	primero *nodoCola[T]
+	ultimo  *nodoCola[T]
+}
+type nodoCola[T any] struct {
+	dato T
+	prox *nodoCola[T]
 }
 
-func crearNodo[T any](dato T) *nodo[T] {
-	return &nodo[T]{dato: dato, siguiente: nil}
+func nodoCrear[T any](dato T) *nodoCola[T] {
+	nodo := new(nodoCola[T])
+	nodo.dato = dato
+	return nodo
 }
 
 func CrearColaEnlazada[T any]() Cola[T] {
-	return &colaEnlazada[T]{primero: nil, ultimo: nil}
+	cola := new(colaEnlazada[T])
+	return cola
 }
 
 func (c *colaEnlazada[T]) EstaVacia() bool {
@@ -29,28 +31,21 @@ func (c *colaEnlazada[T]) VerPrimero() T {
 	return c.primero.dato
 }
 
-func (c *colaEnlazada[T]) Encolar(any T) {
+func (c *colaEnlazada[T]) Encolar(dato T) {
+	nodo := nodoCrear(dato)
 	if c.EstaVacia() {
-		c.primero = crearNodo(any)
-		c.ultimo = c.primero
-		c.primero.siguiente = c.ultimo
+		c.primero = nodo
 	} else {
-		c.ultimo.siguiente = crearNodo(any)
-		c.ultimo = c.ultimo.siguiente
+		c.ultimo.prox = nodo
 	}
+	c.ultimo = nodo
 }
 
 func (c *colaEnlazada[T]) Desencolar() T {
+	dato := c.VerPrimero()
+	c.primero = c.primero.prox
 	if c.EstaVacia() {
-		panic("La cola esta vacia")
+		c.ultimo = nil
 	}
-
-	aux := c.primero.dato
-
-	if c.primero == c.ultimo {
-		c.primero = nil
-	} else {
-		c.primero = c.primero.siguiente
-	}
-	return aux
+	return dato
 }
